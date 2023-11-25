@@ -30,8 +30,13 @@ export type TUser = {
   orders?: TOrders;
 };
 
-export type TUserMethod = {
+export interface TUserModel extends Model<TUser> {
+  // eslint-disable-next-line no-unused-vars
   isUserExists(userId: number): Promise<TUser | null>;
-};
+}
 
-export type TUserModel = Model<TUser, Record<string, never>, TUserMethod>;
+// export type TUserMethod = {
+//   // eslint-disable-next-line no-unused-vars
+//   isUserExists(userId: number): Promise<TUser | null>;
+// };
+// export type TUserModel = Model<TUser, Record<string, never>, TUserMethod>;

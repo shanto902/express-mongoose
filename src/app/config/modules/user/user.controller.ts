@@ -8,13 +8,14 @@ const createUser = async (req: Request, res: Response) => {
     const result = await UserServices.createUserIntoDB(zodParsedData);
     res.status(200).json({
       success: true,
-      message: 'User is created successfully',
+      message: 'User created successfully!',
       data: result,
     });
-  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: 'Something went wrong',
+      message: error.message || 'Something went wrong',
       error: error,
     });
   }
@@ -25,7 +26,7 @@ const getAllUsers = async (req: Request, res: Response) => {
     const result = await UserServices.getUsersFromDB();
     res.status(200).json({
       success: true,
-      message: 'Users retrieved successfully',
+      message: 'Users fetched successfully!',
       data: result,
     });
   } catch (error) {
@@ -42,16 +43,23 @@ const getSingleUser = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const parsedUserId = parseInt(userId, 10);
     const result = await UserServices.getSingleUserFromDB(parsedUserId);
+
     res.status(200).json({
       success: true,
-      message: 'User retrieved successfully',
+      message: 'User fetched successfully',
       data: result,
     });
   } catch (error) {
-    res.status(500).json({
+    const statusCode = error.statusCode || 500;
+    const errorMessage = error.message || 'Something went wrong';
+
+    res.status(statusCode).json({
       success: false,
-      message: 'Something went wrong',
-      error: error,
+      message: errorMessage,
+      error: {
+        code: statusCode,
+        description: errorMessage,
+      },
     });
   }
 };
@@ -77,14 +85,20 @@ const updateUser = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: 'User is updated successfully',
+      message: 'User updated successfully',
       data: result,
     });
-  } catch (error) {
-    res.status(500).json({
+  } catch (error: any) {
+    const statusCode = error.statusCode || 500;
+    const errorMessage = error.message || 'Something went wrong';
+
+    res.status(statusCode).json({
       success: false,
-      message: 'Something went wrong',
-      error: error,
+      message: errorMessage,
+      error: {
+        code: statusCode,
+        description: errorMessage,
+      },
     });
   }
 };
