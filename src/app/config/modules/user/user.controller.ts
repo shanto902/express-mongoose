@@ -82,6 +82,24 @@ const updateUser = async (req: Request, res: Response) => {
   }
 };
 
+export const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const parsedUserId = parseInt(userId, 10);
+
+    await UserServices.deleteUser(parsedUserId);
+
+    res.status(200).json({
+      success: true,
+      message: 'User deleted successfully!',
+      data: null,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    handleErrorResponse(error, res);
+  }
+};
+
 export const addOrderToUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -144,16 +162,19 @@ export const getTotalPrice = async (req: Request, res: Response) => {
   }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleErrorResponse = (error: any, res: Response) => {
   if (error.name === 'ValidationError') {
-    // Handle validation errors
-    const validationErrors = error.errors.map((err: any) => ({
-      code: 'invalid_type',
-      expected: err.kind,
-      received: typeof err.value,
-      path: err.path,
-      message: `Expected ${err.kind}, received ${typeof err.value}`,
-    }));
+    const validationErrors = Array.isArray(error.errors)
+      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        error.errors.map((err: any) => ({
+          code: 'invalid_type',
+          expected: err.kind,
+          received: typeof err.value,
+          path: err.path,
+          message: `Expected ${err.kind}, received ${typeof err.value}`,
+        }))
+      : [];
 
     res.status(400).json({
       success: false,
@@ -161,7 +182,6 @@ const handleErrorResponse = (error: any, res: Response) => {
       error: validationErrors,
     });
   } else if (error.message === 'User not found') {
-    // Handle user not found error
     res.status(404).json({
       success: false,
       message: 'User not found',
@@ -171,7 +191,6 @@ const handleErrorResponse = (error: any, res: Response) => {
       },
     });
   } else {
-    // Handle other errors with a generic error response
     res.status(500).json({
       success: false,
       message: 'Something went wrong',
@@ -179,6 +198,7 @@ const handleErrorResponse = (error: any, res: Response) => {
     });
   }
 };
+
 export const UserController = {
   createUser,
   getAllUsers,
@@ -187,4 +207,5 @@ export const UserController = {
   addOrderToUser,
   getUserOrders,
   getTotalPrice,
+  deleteUser,
 };

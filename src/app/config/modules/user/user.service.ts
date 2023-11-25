@@ -12,6 +12,7 @@ const createUserIntoDB = async (user: TUser): Promise<TUser> => {
 const getUsersFromDB = async () => {
   const result = await UserModel.find().select({
     userId: 1,
+    username: 1,
     fullName: 1,
     age: 1,
     email: 1,
@@ -22,7 +23,15 @@ const getUsersFromDB = async () => {
 
 const getSingleUserFromDB = async (userId: number): Promise<TUser | null> => {
   if (await UserModel.isUserExists(userId)) {
-    const result = await UserModel.findOne({ userId }).exec();
+    const result = await UserModel.findOne({ userId }).select({
+      userId: 1,
+      username: 1,
+      fullName: 1,
+      age: 1,
+      email: 1,
+      hobbies: 1,
+      address: 1,
+    });
     return result;
   } else {
     const error = new Error('User not found');
@@ -48,6 +57,18 @@ const updateSingleUserFromDB = async (
     (error as any).statusCode = 404;
     throw error;
   }
+};
+
+export const deleteUser = async (userId: number) => {
+  const user = await UserModel.findOne({ userId });
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  await UserModel.deleteOne({ userId });
+
+  return null;
 };
 
 export const addUserOrder = async (
@@ -96,4 +117,5 @@ export const UserServices = {
   addUserOrder,
   getUserOrders,
   calculateTotalPrice,
+  deleteUser,
 };
