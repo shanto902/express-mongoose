@@ -1,0 +1,207 @@
+{
+	"info": {
+		"_postman_id": "fa4bbf67-11e6-4554-a0f5-54d64f55f452",
+		"name": "express-mongoose",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7030947"
+	},
+	"item": [
+		{
+			"name": "create-user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\n        \"userId\": 1,\n        \"username\": \"john_doae\",\n        \"password\": \"putula\",\n        \"fullName\": {\n            \"firstName\": \"John\",\n            \"lastName\": \"Doe\"\n        },\n        \"age\": 30,\n        \"email\": \"john.do1e@example.com\",\n        \"isActive\": true,\n        \"hobbies\": [\n            \"reading\",\n            \"traveling\"\n        ],\n        \"address\": {\n            \"street\": \"123 Main St\",\n            \"city\": \"Anytown\",\n            \"country\": \"USA\"\n        }\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get-all-users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get-single-user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/users/4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update-user",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\n        \"userId\": 2,\n        \"username\": \"john_nwe\",\n        \"password\": \"224\",\n        \"fullName\": {\n            \"firstName\": \"John\",\n            \"lastName\": \"Doe\"\n        },\n        \"age\": 31,\n        \"email\": \"john@example.com\",\n        \"isActive\": true,\n        \"hobbies\": [\n            \"reading\",\n            \"gaming\"\n        ],\n        \"address\": {\n            \"street\": \"123 Main St\",\n            \"city\": \"Anytown\",\n            \"country\": \"USA\"\n        }\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/users/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete-user",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/users/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add-orders",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/users/1?name=shanto&age=24",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"1"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "shanto"
+						},
+						{
+							"key": "age",
+							"value": "24"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get-orders",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/users/2/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"2",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get-total-price",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/users/2/orders/total-price",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"2",
+						"orders",
+						"total-price"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
