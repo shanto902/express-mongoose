@@ -31,4 +31,15 @@ const userValidationSchema = z.object({
   address: addressValidationSchema,
 });
 
+export const updateUserValidationSchema = z.object({
+  username: z.string().min(1).max(255).optional(),
+  password: z.string().min(1).max(255).optional(),
+  fullName: fullNameValidationSchema.optional(),
+  age: z.number().optional(),
+  email: z.string().email({ message: 'Invalid email address' }).optional(),
+  isActive: z.boolean().optional(),
+  hobbies: z.array(z.string()).optional(),
+  address: addressValidationSchema.optional(),
+});
+
 export default userValidationSchema;

@@ -70,8 +70,30 @@ const getSingleUser = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         });
     }
 });
+const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = req.query;
+        const { userId } = req.params;
+        const parsedUserId = parseInt(userId, 10);
+        const zodParsedData = user_validation_1.default.parse(user);
+        const result = yield user_service_1.UserServices.updateSingleUserFromDB(parsedUserId, zodParsedData);
+        res.status(200).json({
+            success: true,
+            message: 'User is created successfully',
+            data: result,
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Something went wrong',
+            error: error,
+        });
+    }
+});
 exports.UserController = {
     createUser,
     getAllUsers,
     getSingleUser,
+    updateUser,
 };

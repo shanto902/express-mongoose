@@ -16,15 +16,29 @@ const createUserIntoDB = (user) => __awaiter(void 0, void 0, void 0, function* (
     return result;
 });
 const getUsersFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_model_1.UserModel.find();
+    const result = yield user_model_1.UserModel.find().select({
+        userId: 1,
+        fullName: 1,
+        age: 1,
+        email: 1,
+        address: 1,
+    });
     return result;
 });
 const getSingleUserFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_model_1.UserModel.findOne({ userId }).exec();
     return result;
 });
+const updateSingleUserFromDB = (userId, userData) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_model_1.UserModel.findOneAndUpdate({ userId }, userData, {
+        new: true,
+        runValidators: true,
+    });
+    return result;
+});
 exports.UserServices = {
     createUserIntoDB,
     getUsersFromDB,
     getSingleUserFromDB,
+    updateSingleUserFromDB,
 };
