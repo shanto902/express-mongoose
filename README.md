@@ -4,17 +4,39 @@
 
 Develop a Node.js Express application using TypeScript and MongoDB with Mongoose. Ensure data integrity through validation using Joi/Zod.
 
-### Project Setup
+## Project Setup
 
-Create a new Node.js Express project.
+Running Locally
+To run this project locally, follow these steps:
 
-Set up a MongoDB database using Mongoose for storing user and order data.
+git clone https://github.com/shanto902/express-mongoose.git
 
-Data Models
-
-User Data Model
+Navigate to the Project Directory:
 
 ```
+cd your-project
+```
+
+Install Dependencies
+
+```
+npm install
+```
+
+Start the Application:
+
+```
+npm start
+```
+
+This will start the development server. You can access the application at http://localhost:3000 in your web browser.
+
+## Data Models
+
+**User Data Model**
+
+```
+
 userId (number)
 username (string)
 password (string)
@@ -33,6 +55,7 @@ orders (array of objects)
 productName (string)
 price (number)
 quantity (number)
+
 ```
 
 User Management & Order Management
@@ -73,3 +96,7 @@ User Management & Order Management
 ## API Documentation
 
 - [Postman Collection](./docs/postman.json)
+
+```
+
+```
