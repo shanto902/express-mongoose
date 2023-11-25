@@ -17,7 +17,7 @@ const addressValidationSchema = z.object({
   country: z.string({ required_error: 'Country is required' }).min(1).max(255),
 });
 
-const userValidationSchema = z.object({
+export const userValidationSchema = z.object({
   userId: z.number(),
   username: z.string().min(1).max(255),
   password: z.string().min(1).max(255),
@@ -42,4 +42,8 @@ export const updateUserValidationSchema = z.object({
   address: addressValidationSchema.optional(),
 });
 
-export default userValidationSchema;
+export const addProductValidationSchema = z.object({
+  productName: z.string().min(1).max(255),
+  price: z.number(),
+  quantity: z.number(),
+});

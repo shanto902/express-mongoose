@@ -1,4 +1,4 @@
-import { TUser } from './user.interface';
+import { TOrders, TUser } from './user.interface';
 import { UserModel } from './user.model';
 
 const createUserIntoDB = async (user: TUser): Promise<TUser> => {
@@ -26,6 +26,7 @@ const getSingleUserFromDB = async (userId: number): Promise<TUser | null> => {
     return result;
   } else {
     const error = new Error('User not found');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (error as any).statusCode = 404;
     throw error;
   }
@@ -43,13 +44,56 @@ const updateSingleUserFromDB = async (
     return result;
   } else {
     const error = new Error('User not found');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (error as any).statusCode = 404;
     throw error;
   }
 };
+
+export const addUserOrder = async (
+  userId: number,
+  orderData: { productName: string; price: number; quantity: number },
+) => {
+  const user = await UserModel.findOne({ userId });
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  if (!user.orders) {
+    user.orders = [] as Array<TOrders>;
+  } else {
+    user?.orders.push(orderData);
+    await user.save();
+  }
+
+  return null;
+};
+
+export const getUserOrders = async (userId: number) => {
+  const user = await UserModel.isUserExists(userId);
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+  return user.orders || [];
+};
+
+export const calculateTotalPrice = async (userId: number) => {
+  const orders = await getUserOrders(userId);
+  const totalPrice = orders.reduce(
+    (total, order) => total + order.price * order.quantity,
+    0,
+  );
+  return totalPrice;
+};
+
 export const UserServices = {
   createUserIntoDB,
   getUsersFromDB,
   getSingleUserFromDB,
   updateSingleUserFromDB,
+  addUserOrder,
+  getUserOrders,
+  calculateTotalPrice,
 };

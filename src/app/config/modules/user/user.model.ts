@@ -1,6 +1,13 @@
 import { Schema, model } from 'mongoose';
-import { TAddress, TFullName, TUser, TUserModel } from './user.interface';
-
+import {
+  TAddress,
+  TFullName,
+  TOrders,
+  TUser,
+  TUserModel,
+} from './user.interface';
+import bcrypt from 'bcrypt';
+import config from '../..';
 const userNameSchema = new Schema<TFullName>({
   firstName: {
     type: String,
@@ -18,6 +25,12 @@ const userAddressSchema = new Schema<TAddress>({
   street: { type: String, required: [true, 'Street Required'] },
   city: { type: String, required: [true, 'City Required'] },
   country: { type: String, required: [true, 'Country Required'] },
+});
+
+const orderSchema = new Schema<TOrders>({
+  productName: String,
+  price: Number,
+  quantity: Number,
 });
 
 const userSchema = new Schema<TUser, TUserModel>({
@@ -46,12 +59,21 @@ const userSchema = new Schema<TUser, TUserModel>({
     type: userAddressSchema,
     required: [true, 'Address Required'],
   },
+  orders: [orderSchema],
 });
 
-// userSchema.methods.isUserExists = async function (userId: number) {
-//   const existingUser = await UserModel.findOne({ userId });
-//   return existingUser;
-// };
+userSchema.pre('save', async function (next) {
+  this.password = await bcrypt.hash(
+    this.password,
+    Number(config.bcrypt_salt_round),
+  );
+  next();
+});
+
+userSchema.post('save', async function (doc, next) {
+  doc.password = '';
+  next();
+});
 
 userSchema.statics.isUserExists = async function (userId: number) {
   const existingUser = await UserModel.findOne({ userId });

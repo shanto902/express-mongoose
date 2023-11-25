@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import { UserServices } from './user.service';
-import userValidationSchema from './user.validation';
+import {
+  addProductValidationSchema,
+  userValidationSchema,
+} from './user.validation';
+
 const createUser = async (req: Request, res: Response) => {
   try {
     const user = req.body;
@@ -13,11 +17,7 @@ const createUser = async (req: Request, res: Response) => {
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || 'Something went wrong',
-      error: error,
-    });
+    handleErrorResponse(error, res);
   }
 };
 
@@ -30,11 +30,7 @@ const getAllUsers = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Something went wrong',
-      error: error,
-    });
+    handleErrorResponse(error, res);
   }
 };
 
@@ -49,18 +45,9 @@ const getSingleUser = async (req: Request, res: Response) => {
       message: 'User fetched successfully',
       data: result,
     });
-  } catch (error) {
-    const statusCode = error.statusCode || 500;
-    const errorMessage = error.message || 'Something went wrong';
-
-    res.status(statusCode).json({
-      success: false,
-      message: errorMessage,
-      error: {
-        code: statusCode,
-        description: errorMessage,
-      },
-    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    handleErrorResponse(error, res);
   }
 };
 
@@ -69,6 +56,7 @@ const updateUser = async (req: Request, res: Response) => {
     const user = req.body;
     const { userId } = req.params;
     const parsedUserId = parseInt(userId, 10);
+    // Here Validating Data Using Zod
     const zodParsedData = userValidationSchema.parse(user);
 
     const result = await UserServices.updateSingleUserFromDB(
@@ -88,24 +76,115 @@ const updateUser = async (req: Request, res: Response) => {
       message: 'User updated successfully',
       data: result,
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    const statusCode = error.statusCode || 500;
-    const errorMessage = error.message || 'Something went wrong';
-
-    res.status(statusCode).json({
-      success: false,
-      message: errorMessage,
-      error: {
-        code: statusCode,
-        description: errorMessage,
-      },
-    });
+    handleErrorResponse(error, res);
   }
 };
 
+export const addOrderToUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const { productName, price, quantity } = req.body;
+    const parsedUserId = parseInt(userId, 10);
+
+    const orderData = addProductValidationSchema.parse({
+      productName,
+      price,
+      quantity,
+    });
+
+    await UserServices.addUserOrder(parsedUserId, orderData);
+
+    res.status(200).json({
+      success: true,
+      message: 'Order created successfully!',
+      data: null,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    handleErrorResponse(error, res);
+  }
+};
+
+export const getUserOrders = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const parsedUserId = parseInt(userId, 10);
+
+    const result = await UserServices.getUserOrders(parsedUserId);
+
+    res.status(200).json({
+      success: true,
+      message: 'Order fetched successfully!',
+      data: result,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    handleErrorResponse(error, res);
+  }
+};
+
+export const getTotalPrice = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+
+    const parsedUserId = parseInt(userId, 10);
+
+    const result = await UserServices.calculateTotalPrice(parsedUserId);
+
+    res.status(200).json({
+      success: true,
+      message: 'Total price calculated successfully!',
+      data: { totalPrice: result },
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    handleErrorResponse(error, res);
+  }
+};
+
+const handleErrorResponse = (error: any, res: Response) => {
+  if (error.name === 'ValidationError') {
+    // Handle validation errors
+    const validationErrors = error.errors.map((err: any) => ({
+      code: 'invalid_type',
+      expected: err.kind,
+      received: typeof err.value,
+      path: err.path,
+      message: `Expected ${err.kind}, received ${typeof err.value}`,
+    }));
+
+    res.status(400).json({
+      success: false,
+      message: 'Validation error',
+      error: validationErrors,
+    });
+  } else if (error.message === 'User not found') {
+    // Handle user not found error
+    res.status(404).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    });
+  } else {
+    // Handle other errors with a generic error response
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong',
+      error: error.message,
+    });
+  }
+};
 export const UserController = {
   createUser,
   getAllUsers,
   getSingleUser,
   updateUser,
+  addOrderToUser,
+  getUserOrders,
+  getTotalPrice,
 };

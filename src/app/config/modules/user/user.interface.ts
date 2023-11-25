@@ -27,16 +27,10 @@ export type TUser = {
   isActive: boolean;
   hobbies?: string[];
   address: TAddress;
-  orders?: TOrders;
+  orders?: Array<TOrders> | undefined;
 };
 
 export interface TUserModel extends Model<TUser> {
   // eslint-disable-next-line no-unused-vars
   isUserExists(userId: number): Promise<TUser | null>;
 }
-
-// export type TUserMethod = {
-//   // eslint-disable-next-line no-unused-vars
-//   isUserExists(userId: number): Promise<TUser | null>;
-// };
-// export type TUserModel = Model<TUser, Record<string, never>, TUserMethod>;
