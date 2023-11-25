@@ -36,7 +36,6 @@ This will start the development server. You can access the application at http:/
 **User Data Model**
 
 ```
-
 userId (number)
 username (string)
 password (string)
@@ -55,7 +54,6 @@ orders (array of objects)
 productName (string)
 price (number)
 quantity (number)
-
 ```
 
 User Management & Order Management
@@ -81,6 +79,7 @@ User Management & Order Management
    Endpoint: DELETE /api/users/:userId
 
 6. Add New Product in Order
+
    Endpoint: PUT /api/users/:userId/orders
 
 7. Retrieve All Orders for a Specific User
@@ -96,7 +95,3 @@ User Management & Order Management
 ## API Documentation
 
 - [Postman Collection](./docs/postman.json)
-
-```
-
-```
