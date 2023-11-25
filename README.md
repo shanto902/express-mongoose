@@ -68,6 +68,6 @@ User Management & Order Management
 
    Endpoint: GET /api/users/:userId/orders/total-price
 
-## PostMan Collection
+##
 
-`https://api.postman.com/collections/7030947-fa4bbf67-11e6-4554-a0f5-54d64f55f452?access_key=PMAT-01HG3QET00Y7DZEDTJC53385SW`
+**<a href="https://api.postman.com/collections/7030947-fa4bbf67-11e6-4554-a0f5-54d64f55f452?access_key=PMAT-01HG3QET00Y7DZEDTJC53385SW" target="_blank">PostMan Collection</a>**
